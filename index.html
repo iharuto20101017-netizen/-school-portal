@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Portal Ultimate</title>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  font-family:sans-serif;
+  background:#0f172a;
+  color:white;
+  padding:20px;
+}
+.light{
+  background:#f1f5f9;
+  color:#0f172a;
+}
+.header{
+  margin-bottom:30px;
+}
+.header h1{
+  font-size:2rem;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+  gap:20px;
+}
+.card{
+  background:#1e293b;
+  border-radius:24px;
+  padding:20px;
+}
+.light .card{
+  background:white;
+}
+.card h2{
+  margin-bottom:16px;
+}
+input,
+textarea,
+button,
+select{
+  width:100%;
+  margin-bottom:12px;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:1rem;
+}
+textarea{
+  min-height:120px;
+}
+button{
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+button:hover{
+  opacity:0.9;
+}
+.result-box{
+  background:#334155;
+  padding:14px;
+  border-radius:14px;
+  margin-top:10px;
+}
+.light .result-box{
+  background:#e2e8f0;
+}
+canvas{
+  width:100%;
+  background:white;
+  border-radius:14px;
+}
+#chatMessages{
+  height:260px;
+  overflow:auto;
+  background:#0f172a;
+  padding:12px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+.chat-message{
+  margin-bottom:12px;
+  padding:10px;
+  border-radius:10px;
+  background:#1e293b;
+}
+.todo-item{
+  background:#334155;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+.word-card{
+  background:#334155;
+  padding:20px;
+  border-radius:20px;
+  text-align:center;
+}
+.timer{
+  font-size:3rem;
+  text-align:center;
+  margin:20px 0;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+td{
+  border:1px solid #475569;
+  padding:10px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>School Portal Ultimate</h1>
+<button onclick="toggleTheme()">
+テーマ切替
+</button>
+</div>
+<div class="grid">
+<div class="card">
+<h2>ログイン</h2>
+<input
+id="password"
+type="password"
+placeholder="パスワード">
+<button onclick="login()">
+ログイン
+</button>
+<div id="loginResult"></div>
+</div>
+<div class="card">
+<h2>AIチャット</h2>
+<div id="chatMessages"></div>
+<textarea
+id="aiInput"
+placeholder="質問を入力"></textarea>
+<button onclick="askAI()">
+送信
+</button>
+</div>
+<div class="card">
+<h2>時間割</h2>
+<input id="subject1" placeholder="1限">
+<input id="subject2" placeholder="2限">
+<input id="subject3" placeholder="3限">
+<button onclick="saveTimetable()">
+保存
+</button>
+<div id="timetableResult"></div>
+</div>
+<div class="card">
+<h2>宿題管理</h2>
+<input id="todoInput" placeholder="宿題">
+<button onclick="addTodo()">
+追加
+</button>
+<div id="todoList"></div>
+</div>
+<div class="card">
+<h2>勉強タイマー</h2>
+<div class="timer" id="timer">
+25:00
+</div>
+<button onclick="startTimer()">
+開始
+</button>
+<button onclick="stopTimer()">
+停止
+</button>
+<button onclick="resetTimer()">
+リセット
+</button>
+</div>
+<div class="card">
+<h2>関数グラフ</h2>
+<input
+id="graphInput"
+placeholder="x*x">
+<canvas
+id="graphCanvas"
+width="400"
+height="300"></canvas>
+<button onclick="drawGraph()">
+描画
+</button>
+</div>
+<div class="card">
+<h2>二次方程式</h2>
+<input id="a" placeholder="a">
+<input id="b" placeholder="b">
+<input id="c" placeholder="c">
+<button onclick="solveEquation()">
+計算
+</button>
+<div id="equationResult"></div>
+</div>
+<div class="card">
+<h2>ベクトル計算</h2>
+<input id="vx1" placeholder="x1">
+<input id="vy1" placeholder="y1">
+<input id="vx2" placeholder="x2">
+<input id="vy2" placeholder="y2">
+<button onclick="vectorCalc()">
+計算
+</button>
+<div id="vectorResult"></div>
+</div>
+<div class="card">
+<h2>三角比</h2>
+<input id="angle" placeholder="角度">
+<button onclick="calcTrig()">
+計算
+</button>
+<div id="trigResult"></div>
+</div>
+<div class="card">
+<h2>数列計算</h2>
+<input id="firstTerm" placeholder="初項">
+<input id="difference" placeholder="公差">
+<input id="nValue" placeholder="n">
+<button onclick="calcSequence()">
+計算
+</button>
+<div id="sequenceResult"></div>
+</div>
+<div class="card">
+<h2>モル計算</h2>
+<input id="mass" placeholder="質量">
+<input id="molar" placeholder="モル質量">
+<button onclick="calcMol()">
+計算
+</button>
+<div id="molResult"></div>
+</div>
+<div class="card">
+<h2>力学計算</h2>
+<input id="massPhysics" placeholder="質量">
+<input id="acceleration" placeholder="加速度">
+<button onclick="calcForce()">
+計算
+</button>
+<div id="forceResult"></div>
+</div>
+<div class="card">
+<h2>波計算</h2>
+<input id="speed" placeholder="速さ">
+<input id="frequency" placeholder="振動数">
+<button onclick="calcWave()">
+計算
+</button>
+<div id="waveResult"></div>
+</div>
+<div class="card">
+<h2>電気回路</h2>
+<input id="voltage" placeholder="電圧">
+<input id="resistance" placeholder="抵抗">
+<button onclick="calcCurrent()">
+計算
+</button>
+<div id="currentResult"></div>
+</div>
+<div class="card">
+<h2>英単語帳</h2>
+<div id="wordCard" class="word-card"></div>
+<button onclick="nextWord()">
+次へ
+</button>
+<button onclick="speakWord()">
+発音
+</button>
+</div>
+<div class="card">
+<h2>英作文添削</h2>
+<textarea id="englishEssay"></textarea>
+<button onclick="checkEssay()">
+添削
+</button>
+<div id="essayResult"></div>
+</div>
+<div class="card">
+<h2>英文要約</h2>
+<textarea id="summaryText"></textarea>
+<button onclick="summarizeText()">
+要約
+</button>
+<div id="summaryResult"></div>
+</div>
+<div class="card">
+<h2>文法チェック</h2>
+<textarea id="grammarText"></textarea>
+<button onclick="checkGrammar()">
+確認
+</button>
+<div id="grammarResult"></div>
+</div>
+<div class="card">
+<h2>ATP</h2>
+<div class="result-box">
+ATPはアデノシン三リン酸。<br>
+生物がエネルギーとして利用する。
+</div>
+</div>
+<div class="card">
+<h2>DNA</h2>
+<div class="result-box">
+DNAは遺伝情報を持つ物質。
+</div>
+</div>
+<div class="card">
+<h2>イオン一覧</h2>
+<table>
+<tr>
+<td>Na+</td>
+<td>ナトリウムイオン</td>
+</tr>
+<tr>
+<td>Cl-</td>
+<td>塩化物イオン</td>
+</tr>
+<tr>
+<td>Ca2+</td>
+<td>カルシウムイオン</td>
+</tr>
+</table>
+</div>
+<div class="card">
+<h2>テストカウントダウン</h2>
+<input type="date" id="testDate">
+<button onclick="calculateCountdown()">
+計算
+</button>
+<div id="countdownResult"></div>
+</div>
+<div class="card">
+<h2>ファイル共有</h2>
+<input type="file">
+<button>
+アップロード
+</button>
+</div>
+</div>
+<script>
+const PASSWORD = 'school2026';
+function login(){
+  const value =
+    document.getElementById('password').value;
+  if(value === PASSWORD){
+    localStorage.setItem('login','true');
+    loginResult.innerHTML =
+      'ログイン成功';
+  }else{
+    loginResult.innerHTML =
+      'パスワードが違います';
+  }
+}
+function toggleTheme(){
+  document.body.classList.toggle('light');
+  if(document.body.classList.contains('light')){
+    localStorage.setItem('theme','light');
+  }else{
+    localStorage.setItem('theme','dark');
+  }
+}
+if(localStorage.getItem('theme') === 'light'){
+  document.body.classList.add('light');
+}
+async function askAI(){
+  const text = aiInput.value;
+  if(!text) return;
+  chatMessages.innerHTML += `
+    <div class="chat-message">
+      あなた: ${text}
+    </div>
+  `;
+  aiInput.value = '';
+  try{
+    const response = await fetch(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'Authorization':'Bearer YOUR_API_KEY'
+        },
+        body:JSON.stringify({
+          model:'gpt-4.1-mini',
+          messages:[
+            {
+              role:'system',
+              content:'学校用AIアシスタント'
+            },
+            {
+              role:'user',
+              content:text
+            }
+          ]
+        })
+      }
+    );
+    const data = await response.json();
+    chatMessages.innerHTML += `
+      <div class="chat-message">
+        AI: ${data.choices[0].message.content}
+      </div>
+    `;
+  }catch{
+    chatMessages.innerHTML += `
+      <div class="chat-message">
+        AI接続エラー
+      </div>
+    `;
+  }
+}
+function saveTimetable(){
+  const data = {
+    s1:subject1.value,
+    s2:subject2.value,
+    s3:subject3.value
+  };
+  localStorage.setItem(
+    'timetable',
+    JSON.stringify(data)
+  );
+  timetableResult.innerHTML =
+    '保存完了';
+}
+const timetable =
+  JSON.parse(localStorage.getItem('timetable'));
+if(timetable){
+  subject1.value = timetable.s1;
+  subject2.value = timetable.s2;
+  subject3.value = timetable.s3;
+}
+function addTodo(){
+  const text = todoInput.value;
+  todoList.innerHTML += `
+    <div class="todo-item">
+      ${text}
+    </div>
+  `;
+  localStorage.setItem(
+    'todos',
+    todoList.innerHTML
+  );
+  todoInput.value = '';
+}
+todoList.innerHTML =
+  localStorage.getItem('todos') || '';
+let timeLeft = 1500;
+let timer;
+function updateTimer(){
+  const min =
+    Math.floor(timeLeft / 60);
+  const sec =
+    timeLeft % 60;
+  timer.innerHTML =
+    `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+function startTimer(){
+  if(timer) return;
+  timer = setInterval(()=>{
+    if(timeLeft > 0){
+      timeLeft--;
+      updateTimer();
+    }else{
+      clearInterval(timer);
+      timer = null;
+    }
+  },1000);
+}
+function stopTimer(){
+  clearInterval(timer);
+  timer = null;
+}
+function resetTimer(){
+  clearInterval(timer);
+  timer = null;
+  timeLeft = 1500;
+  updateTimer();
+}
+updateTimer();
+function drawGraph(){
+  const exp = graphInput.value;
+  const canvas =
+    document.getElementById('graphCanvas');
+  const ctx =
+    canvas.getContext('2d');
+  ctx.clearRect(0,0,400,300);
+  ctx.beginPath();
+  for(let x=-10;x<=10;x+=0.1){
+    let y;
+    try{
+      y = eval(exp.replaceAll('x',`(${x})`));
+    }catch{
+      return;
+    }
+    const px = 200 + x*15;
+    const py = 150 - y*10;
+    if(x === -10){
+      ctx.moveTo(px,py);
+    }else{
+      ctx.lineTo(px,py);
+    }
+  }
+  ctx.strokeStyle = '#2563eb';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+}
+function solveEquation(){
+  const av = Number(a.value);
+  const bv = Number(b.value);
+  const cv = Number(c.value);
+  const d = bv*bv - 4*av*cv;
+  equationResult.innerHTML =
+    `${(-bv + Math.sqrt(d))/(2*av)} , ${(-bv - Math.sqrt(d))/(2*av)}`;
+}
+function vectorCalc(){
+  const result =
+    Number(vx1.value) * Number(vx2.value)
+    +
+    Number(vy1.value) * Number(vy2.value);
+  vectorResult.innerHTML =
+    `内積 ${result}`;
+}
+function calcTrig(){
+  const rad =
+    Number(angle.value)
+    *
+    Math.PI
+    /
+    180;
+  trigResult.innerHTML = `
+    sin ${Math.sin(rad).toFixed(3)}<br>
+    cos ${Math.cos(rad).toFixed(3)}<br>
+    tan ${Math.tan(rad).toFixed(3)}
+  `;
+}
+function calcSequence(){
+  const result =
+    Number(firstTerm.value)
+    +
+    (Number(nValue.value)-1)
+    *
+    Number(difference.value);
+  sequenceResult.innerHTML =
+    result;
+}
+function calcMol(){
+  molResult.innerHTML =
+    Number(mass.value)
+    /
+    Number(molar.value)
+    +
+    ' mol';
+}
+function calcForce(){
+  forceResult.innerHTML =
+    Number(massPhysics.value)
+    *
+    Number(acceleration.value)
+    +
+    ' N';
+}
+function calcWave(){
+  waveResult.innerHTML =
+    Number(speed.value)
+    /
+    Number(frequency.value);
+}
+function calcCurrent(){
+  currentResult.innerHTML =
+    Number(voltage.value)
+    /
+    Number(resistance.value)
+    +
+    ' A';
+}
+const words = [
+  {
+    english:'important',
+    japanese:'重要な'
+  },
+  {
+    english:'develop',
+    japanese:'発展させる'
+  },
+  {
+    english:'environment',
+    japanese:'環境'
+  }
+];
+let wordIndex = 0;
+function nextWord(){
+  const word = words[wordIndex];
+  wordCard.innerHTML = `
+    <h2>${word.english}</h2>
+    <p>${word.japanese}</p>
+  `;
+  wordIndex =
+    (wordIndex + 1)
+    %
+    words.length;
+}
+nextWord();
+function speakWord(){
+  const speech =
+    new SpeechSynthesisUtterance(
+      words[wordIndex].english
+    );
+  speech.lang = 'en-US';
+  speechSynthesis.speak(speech);
+}
+async function checkEssay(){
+  essayResult.innerHTML =
+    'AI添削結果';
+}
+async function summarizeText(){
+  summaryResult.innerHTML =
+    'AI要約結果';
+}
+async function checkGrammar(){
+  grammarResult.innerHTML =
+    'AI文法確認結果';
+}
+function calculateCountdown(){
+  const target =
+    new Date(testDate.value);
+  const now =
+    new Date();
+  const diff =
+    target - now;
+  const days =
+    Math.ceil(
+      diff /
+      (1000*60*60*24)
+    );
+  countdownResult.innerHTML =
+    `あと ${days} 日`;
+}
+</script>
+</body>
+</html>
